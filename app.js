@@ -1,7 +1,7 @@
 const config = {
   title: "دعوة عشاء",
-  welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
-  note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
+  welcome: "يسعدنا دعوتك إلى",
+  note: "❤️ نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
   eventLabel: "عشاء الجمعة · 17 أبريل 2026",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
