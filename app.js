@@ -68,9 +68,7 @@ function render() {
           rel="noopener"
           ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? 'aria-disabled="true"' : ""}
         >
-          <div class="location-preview" style="background-image: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0)), url('${escapeAttribute(config.locationImageSrc)}');" aria-hidden="true">
-            <span class="location-pin"></span>
-          </div>
+          <div class="location-preview" style="background-image: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0)), url('${escapeAttribute(config.locationImageSrc)}');" aria-hidden="true"></div>
           <div class="location-copy">
             <span class="location-kicker">${escapeHtml(config.locationTitle)}</span>
             <strong>${escapeHtml(config.locationLabel)}</strong>
