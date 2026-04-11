@@ -1,17 +1,17 @@
 {
   "id": "./",
-  "name": "بطاقة الدعوة",
+  "name": "دعوة عشاء",
   "short_name": "الدعوة",
-  "description": "بطاقة دعوة عربية مع تأكيد حضور سريع عبر واتساب.",
+  "description": "موقع بسيط لتأكيد حضور دعوة عشاء.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#120a07",
-  "theme_color": "#23140b",
+  "background_color": "#fff3bf",
+  "theme_color": "#ffd77a",
   "lang": "ar",
   "dir": "rtl",
-  "categories": ["events", "lifestyle"],
+  "categories": ["events"],
   "icons": [
     {
       "src": "./assets/icon-192.png",

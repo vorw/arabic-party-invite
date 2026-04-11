@@ -1,106 +1,147 @@
-const eventConfig = {
+const config = {
   title: "دعوة عشاء",
-  subtitle: "يسعدنا حضورك مساء الجمعة 17 أبريل 2026.",
-  details: "أهلاً بك، نتشرف بدعوتك إلى عشاء خاص مساء الجمعة.",
-  gregorianDate: "17 April 2026",
-  whatsappNumber: "966500000000"
+  welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
+  note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
+  eventLabel: "عشاء الجمعة · 17 أبريل 2026",
+  submitEndpoint: ""
 };
 
-const STORAGE_KEY = "party-invite-response";
+const STORAGE_KEY = "invite-rsvp-draft";
 
 const state = {
-  invitee: new URLSearchParams(window.location.search).get("name") || "",
-  response: loadSavedResponse()
+  name: new URLSearchParams(window.location.search).get("name") || "",
+  loading: false,
+  message: "",
+  messageType: "idle"
 };
 
 const root = document.getElementById("app");
 
+loadDraft();
 render();
 attachEvents();
 
 function attachEvents() {
   root.addEventListener("input", (event) => {
     const { target } = event;
-    if (target instanceof HTMLInputElement && target.name === "invitee") {
-      state.invitee = target.value;
-    }
-  });
-
-  root.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-action]");
-    if (!button) {
+    if (!(target instanceof HTMLInputElement)) {
       return;
     }
 
-    if (button.dataset.action === "respond") {
-      submitResponse(button.dataset.value);
+    if (target.name === "guestName") {
+      state.name = target.value;
+      saveDraft();
     }
+  });
+
+  root.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-response]");
+    if (!button || state.loading) {
+      return;
+    }
+
+    await submitResponse(button.dataset.response);
   });
 }
 
 function render() {
   root.innerHTML = `
-    <main class="page-shell">
-      <section class="invite-card">
-        <p class="eyebrow">بطاقة دعوة</p>
-        <h1>${escapeHtml(eventConfig.title)}</h1>
-        <p class="lede">${escapeHtml(eventConfig.details)}</p>
-        <p class="date-line">${escapeHtml(toArabicDate(eventConfig.gregorianDate))}</p>
+    <section class="page-shell">
+      <article class="invite-panel">
+        <p class="eyebrow">أهلاً وسهلاً</p>
+        <h1>${escapeHtml(config.title)}</h1>
+        <p class="welcome">${escapeHtml(config.welcome)}</p>
+        <p class="event-label">${escapeHtml(config.eventLabel)}</p>
+        <p class="note">${escapeHtml(config.note)}</p>
 
-        <label class="field">
+        <label class="field" for="guestName">
           <span>الاسم</span>
-          <input type="text" name="invitee" placeholder="اكتب اسمك" value="${escapeAttribute(state.invitee)}">
+          <input id="guestName" name="guestName" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}" ${state.loading ? "disabled" : ""}>
         </label>
 
         <div class="actions">
-          <button type="button" class="button primary" data-action="respond" data-value="accept">أوافق</button>
-          <button type="button" class="button ghost" data-action="respond" data-value="decline">أعتذر</button>
+          <button class="button accept" type="button" data-response="accepted" ${state.loading ? "disabled" : ""}>سأحضر</button>
+          <button class="button decline" type="button" data-response="declined" ${state.loading ? "disabled" : ""}>لن أستطيع الحضور</button>
         </div>
 
-        <p class="status">${state.response ? escapeHtml(state.response.summary) : escapeHtml(eventConfig.subtitle)}</p>
-      </section>
-    </main>
+        <p class="status ${state.messageType}">${escapeHtml(state.message || "")}</p>
+      </article>
+    </section>
   `;
 }
 
-function submitResponse(value) {
-  const responseLabel = value === "accept" ? "أوافق على الحضور" : "أعتذر عن الحضور";
-  const invitee = state.invitee.trim() || "ضيف من رابط الدعوة";
-  const lines = [
-    "السلام عليكم،",
-    `الرد: ${responseLabel}`,
-    `الاسم: ${invitee}`,
-    "المناسبة: دعوة عشاء يوم الجمعة 17 أبريل 2026"
-  ];
+async function submitResponse(response) {
+  const guestName = state.name.trim();
 
-  state.response = { type: value, summary: `${responseLabel} · ${invitee}` };
-  persistResponse();
+  if (!guestName) {
+    setMessage("الرجاء كتابة الاسم أولاً.", "error");
+    return;
+  }
+
+  if (!config.submitEndpoint) {
+    setMessage("واجهة التخزين غير مهيأة بعد. أستطيع إكمالها فور تزويدنا بقاعدة البيانات أو رابط النموذج.", "error");
+    return;
+  }
+
+  state.loading = true;
+  setMessage("جارٍ إرسال الرد...", "pending");
   render();
 
-  const message = encodeURIComponent(lines.join("\n"));
-  window.open(`https://wa.me/${eventConfig.whatsappNumber}?text=${message}`, "_blank", "noopener");
-}
-
-function loadSavedResponse() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
+    const payload = {
+      name: guestName,
+      response,
+      event: config.eventLabel,
+      submittedAt: new Date().toISOString()
+    };
+
+    const result = await fetch(config.submitEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!result.ok) {
+      throw new Error("تعذر حفظ الرد الآن.");
+    }
+
+    clearDraft();
+    setMessage(response === "accepted" ? "تم تسجيل حضورك بنجاح." : "تم تسجيل اعتذارك بنجاح.", "success");
+  } catch (error) {
+    setMessage(error.message || "تعذر إرسال الرد الآن.", "error");
+  } finally {
+    state.loading = false;
+    render();
   }
 }
 
-function persistResponse() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.response));
+function setMessage(message, type) {
+  state.message = message;
+  state.messageType = type;
 }
 
-function toArabicDate(value) {
-  return new Intl.DateTimeFormat("ar-SA", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  }).format(new Date(value));
+function saveDraft() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ name: state.name }));
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return;
+    }
+
+    const draft = JSON.parse(raw);
+    state.name = state.name || draft.name || "";
+  } catch {
+    state.name = state.name || "";
+  }
+}
+
+function clearDraft() {
+  localStorage.removeItem(STORAGE_KEY);
 }
 
 function escapeHtml(value) {
@@ -108,7 +149,7 @@ function escapeHtml(value) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
+    .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
 
