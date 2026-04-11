@@ -97,23 +97,6 @@ body::before {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0));
 }
 
-.frame {
-  position: absolute;
-  inset: 36px;
-  border: 1px solid rgba(79, 109, 160, 0.16);
-  border-radius: 42px;
-  pointer-events: none;
-}
-
-.frame-a {
-  inset-inline: 18px;
-}
-
-.frame-b {
-  inset: 58px;
-  border-color: rgba(255, 255, 255, 0.34);
-}
-
 .page-shell::before {
   content: "";
   position: absolute;
@@ -121,16 +104,6 @@ body::before {
   background:
     linear-gradient(140deg, rgba(255, 255, 255, 0.4), transparent 30%),
     radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.12), transparent 44%);
-  pointer-events: none;
-}
-
-.page-shell::after {
-  content: "";
-  position: absolute;
-  inset: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 42px;
-  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -494,7 +467,4 @@ input:disabled {
     grid-template-columns: 1fr;
   }
 
-  .frame-b {
-    inset: 42px;
-  }
 }

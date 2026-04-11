@@ -2,7 +2,7 @@ const config = {
   logoSrc: "./assets/logo.png?v=9",
   title: "أمسية جيران اليرموك",
   welcome: "",
-  note: "يرجى تأكيد حضورك أو الاعتذار. يمكن اعتماد اختيار واحد فقط.",
+  note: "",
   locationTitle: "الموقع",
   locationLabel: "بيت أم عبد الملك",
   locationHint: "اضغط لفتح الموقع في خرائط Google",
@@ -78,8 +78,6 @@ function render() {
       <div class="ambient ambient-a" aria-hidden="true"></div>
       <div class="ambient ambient-b" aria-hidden="true"></div>
       <div class="ambient ambient-c" aria-hidden="true"></div>
-      <div class="frame frame-a" aria-hidden="true"></div>
-      <div class="frame frame-b" aria-hidden="true"></div>
       <article class="invite-panel">
         <div class="panel-ornament" aria-hidden="true"></div>
         <p class="eyebrow">دعوة خاصة</p>
@@ -195,8 +193,8 @@ function confirmDecision(response, event) {
   saveDecision();
   setMessage(
     response === "accepted"
-      ? "تم تأكيد حضورك. نراك على خير."
-      : "تم تسجيل اعتذارك. شكرًا لتأكيدك.",
+      ? "أسعدنا قبولك 🌷"
+      : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
     "success"
   );
   render();
@@ -362,8 +360,8 @@ function loadDecision() {
       state.selectedResponse = decision.response;
       setMessage(
         decision.response === "accepted"
-          ? "تم تأكيد حضورك. نراك على خير."
-          : "تم تسجيل اعتذارك. شكرًا لتأكيدك.",
+          ? "أسعدنا قبولك 🌷"
+          : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
         "success"
       );
     }
