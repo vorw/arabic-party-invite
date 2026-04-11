@@ -6,7 +6,19 @@ function doPost(e) {
       sheet.appendRow(["Timestamp", "Name", "Response", "Event", "SubmittedAt"]);
     }
 
-    var payload = JSON.parse(e.postData.contents || "{}");
+    var payload = {};
+
+    if (e.postData && e.postData.contents && String(e.postData.type || "").indexOf("application/json") > -1) {
+      payload = JSON.parse(e.postData.contents || "{}");
+    } else {
+      payload = {
+        name: e.parameter.name,
+        response: e.parameter.response,
+        event: e.parameter.event,
+        submittedAt: e.parameter.submittedAt
+      };
+    }
+
     var name = String(payload.name || "").trim();
     var response = String(payload.response || "").trim();
     var eventName = String(payload.event || "").trim();

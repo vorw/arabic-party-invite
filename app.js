@@ -10,7 +10,6 @@ const STORAGE_KEY = "invite-rsvp-draft";
 
 const state = {
   name: new URLSearchParams(window.location.search).get("name") || "",
-  loading: false,
   message: "",
   messageType: "idle"
 };
@@ -34,13 +33,13 @@ function attachEvents() {
     }
   });
 
-  root.addEventListener("click", async (event) => {
+  root.addEventListener("click", (event) => {
     const button = event.target.closest("[data-response]");
-    if (!button || state.loading) {
+    if (!button) {
       return;
     }
 
-    await submitResponse(button.dataset.response);
+    submitResponse(button.dataset.response);
   });
 }
 
@@ -54,15 +53,23 @@ function render() {
         <p class="event-label">${escapeHtml(config.eventLabel)}</p>
         <p class="note">${escapeHtml(config.note)}</p>
 
-        <label class="field" for="guestName">
-          <span>الاسم</span>
-          <input id="guestName" name="guestName" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}" ${state.loading ? "disabled" : ""}>
-        </label>
+        <form id="rsvpForm" action="${escapeAttribute(config.submitEndpoint)}" method="POST" target="submitFrame">
+          <label class="field" for="guestName">
+            <span>الاسم</span>
+            <input id="guestName" name="name" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}">
+          </label>
 
-        <div class="actions">
-          <button class="button accept" type="button" data-response="accepted" ${state.loading ? "disabled" : ""}>سأحضر</button>
-          <button class="button decline" type="button" data-response="declined" ${state.loading ? "disabled" : ""}>لن أستطيع الحضور</button>
-        </div>
+          <input type="hidden" id="responseField" name="response" value="">
+          <input type="hidden" name="event" value="${escapeAttribute(config.eventLabel)}">
+          <input type="hidden" id="submittedAtField" name="submittedAt" value="">
+
+          <div class="actions">
+            <button class="button accept" type="button" data-response="accepted">سأحضر</button>
+            <button class="button decline" type="button" data-response="declined">لن أستطيع الحضور</button>
+          </div>
+        </form>
+
+        <iframe name="submitFrame" class="submit-frame" title="submit target"></iframe>
 
         <p class="status ${state.messageType}">${escapeHtml(state.message || "")}</p>
       </article>
@@ -70,52 +77,32 @@ function render() {
   `;
 }
 
-async function submitResponse(response) {
+function submitResponse(response) {
   const guestName = state.name.trim();
 
   if (!guestName) {
     setMessage("الرجاء كتابة الاسم أولاً.", "error");
+    render();
     return;
   }
 
   if (!config.submitEndpoint || config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
     setMessage("رابط Google Sheets غير مضاف بعد.", "error");
+    render();
     return;
   }
 
-  state.loading = true;
-  setMessage("جارٍ إرسال الرد...", "pending");
+  const form = document.getElementById("rsvpForm");
+  const responseField = document.getElementById("responseField");
+  const submittedAtField = document.getElementById("submittedAtField");
+
+  responseField.value = response;
+  submittedAtField.value = new Date().toISOString();
+
+  form.submit();
+  clearDraft();
+  setMessage(response === "accepted" ? "تم تسجيل حضورك بنجاح." : "تم تسجيل اعتذارك بنجاح.", "success");
   render();
-
-  try {
-    const payload = {
-      name: guestName,
-      response,
-      event: config.eventLabel,
-      submittedAt: new Date().toISOString()
-    };
-
-    const result = await fetch(config.submitEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      mode: "cors",
-      body: JSON.stringify(payload)
-    });
-
-    if (!result.ok) {
-      throw new Error("تعذر حفظ الرد الآن.");
-    }
-
-    clearDraft();
-    setMessage(response === "accepted" ? "تم تسجيل حضورك بنجاح." : "تم تسجيل اعتذارك بنجاح.", "success");
-  } catch (error) {
-    setMessage(error.message || "تعذر إرسال الرد الآن.", "error");
-  } finally {
-    state.loading = false;
-    render();
-  }
 }
 
 function setMessage(message, type) {
