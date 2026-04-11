@@ -130,15 +130,6 @@ body::before {
   backdrop-filter: blur(20px);
 }
 
-.invite-logo {
-  display: block;
-  width: 104px;
-  height: 104px;
-  margin: 0 auto 16px;
-  object-fit: contain;
-  filter: drop-shadow(0 18px 28px rgba(135, 83, 44, 0.18));
-}
-
 .invite-panel::before {
   content: "";
   position: absolute;
@@ -467,11 +458,6 @@ input:disabled {
   .invite-panel {
     padding: 36px 20px 24px;
     border-radius: 26px;
-  }
-
-  .invite-logo {
-    width: 92px;
-    height: 92px;
   }
 
   .actions {

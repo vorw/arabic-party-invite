@@ -55,7 +55,6 @@ function render() {
       <div class="ambient ambient-c" aria-hidden="true"></div>
       <article class="invite-panel">
         <div class="panel-ornament" aria-hidden="true"></div>
-        <img class="invite-logo" src="${escapeAttribute(config.logoSrc)}" alt="شعار الدعوة">
         <p class="eyebrow">دعوة خاصة</p>
         <h1>${escapeHtml(config.title)}</h1>
         <p class="welcome">${escapeHtml(config.welcome)}</p>
