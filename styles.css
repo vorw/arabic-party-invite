@@ -1,4 +1,5 @@
 :root {
+  --invite-border-image: url("./assets/invite-border.png?v=1");
   --bg-top: #eef3fb;
   --bg-bottom: #bfd0ea;
   --bg-accent: #6d86b3;
@@ -129,6 +130,7 @@ body::before {
   border-radius: inherit;
   padding: 18px;
   background:
+    var(--invite-border-image) center / 100% 100% no-repeat,
     radial-gradient(circle at 18px 18px, transparent 0 18px, rgba(61, 95, 151, 0.96) 18px 24px, transparent 24px) top left / 96px 96px no-repeat,
     radial-gradient(circle at calc(100% - 18px) 18px, transparent 0 18px, rgba(61, 95, 151, 0.96) 18px 24px, transparent 24px) top right / 96px 96px no-repeat,
     radial-gradient(circle at 18px calc(100% - 18px), transparent 0 18px, rgba(61, 95, 151, 0.96) 18px 24px, transparent 24px) bottom left / 96px 96px no-repeat,
@@ -539,6 +541,7 @@ input:disabled {
   .invite-panel::before {
     padding: 14px;
     background:
+      var(--invite-border-image) center / 100% 100% no-repeat,
       radial-gradient(circle at 14px 14px, transparent 0 14px, rgba(61, 95, 151, 0.96) 14px 19px, transparent 19px) top left / 72px 72px no-repeat,
       radial-gradient(circle at calc(100% - 14px) 14px, transparent 0 14px, rgba(61, 95, 151, 0.96) 14px 19px, transparent 19px) top right / 72px 72px no-repeat,
       radial-gradient(circle at 14px calc(100% - 14px), transparent 0 14px, rgba(61, 95, 151, 0.96) 14px 19px, transparent 19px) bottom left / 72px 72px no-repeat,
