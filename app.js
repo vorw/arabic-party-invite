@@ -27,7 +27,7 @@ function attachEvents() {
       return;
     }
 
-    if (target.name === "guestName") {
+    if (target.name === "name") {
       state.name = target.value;
       saveDraft();
     }
@@ -47,7 +47,8 @@ function render() {
   root.innerHTML = `
     <section class="page-shell">
       <article class="invite-panel">
-        <p class="eyebrow">أهلاً وسهلاً</p>
+        <div class="panel-ornament" aria-hidden="true"></div>
+        <p class="eyebrow">Invitation</p>
         <h1>${escapeHtml(config.title)}</h1>
         <p class="welcome">${escapeHtml(config.welcome)}</p>
         <p class="event-label">${escapeHtml(config.eventLabel)}</p>
