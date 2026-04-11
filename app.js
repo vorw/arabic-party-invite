@@ -5,8 +5,8 @@ const config = {
   note: "",
   locationTitle: "الموقع",
   locationLabel: "",
-  locationHint: "",
-  locationImageSrc: "./assets/location-photo.jpg?v=14",
+  locationHint: "اضغط لفتح الموقع في خرائط Google",
+  locationImageSrc: "./assets/location-photo.jpg?v=16",
   locationMapsUrl: "https://maps.app.goo.gl/GyU3XFoqgerX27en6",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
@@ -70,6 +70,7 @@ function attachEvents() {
 
 function render() {
   const hasAccepted = state.lockedResponse === "accepted";
+  const hasDeclined = state.lockedResponse === "declined";
   const isLocked = Boolean(state.lockedResponse);
   const displayResponse = state.lockedResponse || state.selectedResponse;
 
@@ -79,47 +80,50 @@ function render() {
       <div class="ambient ambient-b" aria-hidden="true"></div>
       <div class="ambient ambient-c" aria-hidden="true"></div>
       <article class="invite-panel">
-        <div class="panel-ornament" aria-hidden="true"></div>
-        <p class="eyebrow">دعوة خاصة</p>
-        <h1>${escapeHtml(config.title)}</h1>
-        <p class="note">${escapeHtml(config.note)}</p>
-
         ${hasAccepted ? `
-        <a
-          class="location-card ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? "disabled" : ""}"
-          href="${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? "#" : escapeAttribute(config.locationMapsUrl)}"
-          target="_blank"
-          rel="noopener"
-          ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? 'aria-disabled="true"' : ""}
-        >
-          <div class="location-preview" style="background-image: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0)), url('${escapeAttribute(config.locationImageSrc)}');" aria-hidden="true"></div>
-          <div class="location-copy">
-            <span class="location-kicker">${escapeHtml(config.locationTitle)}</span>
-            <strong>${escapeHtml(config.locationLabel)}</strong>
-            <span>${escapeHtml(config.locationHint)}</span>
+          <div class="result-state result-state-accepted">
+            <p class="location-hint-top">${escapeHtml(config.locationHint)}</p>
+            <a
+              class="location-card location-card-minimal ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? "disabled" : ""}"
+              href="${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? "#" : escapeAttribute(config.locationMapsUrl)}"
+              target="_blank"
+              rel="noopener"
+              ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? 'aria-disabled="true"' : ""}
+            >
+              <div class="location-preview" style="background-image: url('${escapeAttribute(config.locationImageSrc)}');" aria-hidden="true"></div>
+            </a>
+            <p class="result-message accepted-message">${escapeHtml(state.message || "أسعدنا قبولك 🌷")}</p>
           </div>
-        </a>
-        ` : ""}
-
-        <form id="rsvpForm" action="${escapeAttribute(config.submitEndpoint)}" method="POST" target="submitFrame">
-          <label class="field" for="guestName">
-            <span>الاسم</span>
-            <input id="guestName" name="name" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}" ${isLocked ? "disabled" : ""}>
-          </label>
-
-          <input type="hidden" id="responseField" name="response" value="">
-          <input type="hidden" name="event" value="${escapeAttribute(config.title)}">
-          <input type="hidden" id="submittedAtField" name="submittedAt" value="">
-
-          <div class="actions">
-            <button class="button ${displayResponse === "accepted" ? "is-selected" : ""}" type="button" data-response="accepted" ${isLocked ? "disabled" : ""}>سأحضر</button>
-            <button class="button ${displayResponse === "declined" ? "is-selected" : ""}" type="button" data-response="declined" ${isLocked ? "disabled" : ""}>لن أستطيع الحضور</button>
+        ` : hasDeclined ? `
+          <div class="result-state result-state-declined">
+            <p class="result-message declined-message">${escapeHtml(state.message || "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷")}</p>
           </div>
-        </form>
+        ` : `
+          <div class="panel-ornament" aria-hidden="true"></div>
+          <p class="eyebrow">دعوة خاصة</p>
+          <h1>${escapeHtml(config.title)}</h1>
+          ${config.note ? `<p class="note">${escapeHtml(config.note)}</p>` : ""}
+
+          <form id="rsvpForm" action="${escapeAttribute(config.submitEndpoint)}" method="POST" target="submitFrame">
+            <label class="field" for="guestName">
+              <span>الاسم</span>
+              <input id="guestName" name="name" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}" ${isLocked ? "disabled" : ""}>
+            </label>
+
+            <input type="hidden" id="responseField" name="response" value="">
+            <input type="hidden" name="event" value="${escapeAttribute(config.title)}">
+            <input type="hidden" id="submittedAtField" name="submittedAt" value="">
+
+            <div class="actions">
+              <button class="button ${displayResponse === "accepted" ? "is-selected" : ""}" type="button" data-response="accepted" ${isLocked ? "disabled" : ""}>سأحضر</button>
+              <button class="button ${displayResponse === "declined" ? "is-selected" : ""}" type="button" data-response="declined" ${isLocked ? "disabled" : ""}>لن أستطيع الحضور</button>
+            </div>
+          </form>
+        `}
 
         <iframe name="submitFrame" class="submit-frame" title="submit target"></iframe>
 
-        <p class="status ${state.messageType}">${escapeHtml(state.message || "")}</p>
+        ${isLocked ? "" : `<p class="status ${state.messageType}">${escapeHtml(state.message || "")}</p>`}
       </article>
       ${state.showConfirm ? renderConfirmation() : ""}
       <div class="confetti-layer" aria-hidden="true"></div>
@@ -129,18 +133,11 @@ function render() {
 
 function renderConfirmation() {
   const isAccept = state.pendingResponse === "accepted";
-  const title = isAccept ? "تأكيد الحضور" : "تأكيد الاعتذار";
-  const text = isAccept
-    ? "سيتم اعتماد حضورك نهائيًا وإظهار تفاصيل الموقع بعد التأكيد."
-    : "سيتم اعتماد اعتذارك نهائيًا ولن تتمكن من تعديل القرار لاحقًا.";
-  const confirmLabel = isAccept ? "تأكيد الحضور" : "تأكيد الاعتذار";
+  const confirmLabel = isAccept ? "سأحضر" : "لن أستطيع الحضور";
 
   return `
     <div class="confirm-overlay" aria-hidden="true"></div>
-    <section class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
-      <p class="confirm-kicker">تأكيد نهائي</p>
-      <h2 id="confirmTitle">${escapeHtml(title)}</h2>
-      <p>${escapeHtml(text)}</p>
+    <section class="confirm-dialog confirm-dialog-minimal" role="dialog" aria-modal="true" aria-label="تأكيد الاختيار">
       <div class="confirm-actions">
         <button class="button confirm-button is-selected" type="button" data-confirm-response="${escapeAttribute(state.pendingResponse)}">${escapeHtml(confirmLabel)}</button>
         <button class="button confirm-button" type="button" data-confirm-cancel="true">عودة</button>

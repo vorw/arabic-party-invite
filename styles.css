@@ -176,6 +176,18 @@ h1 {
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
+.location-card-minimal {
+  margin: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.location-card-minimal:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .location-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 24px 48px rgba(49, 76, 118, 0.14);
@@ -193,16 +205,6 @@ h1 {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-.location-preview::before {
-  content: "";
-  position: absolute;
-  inset: 18px;
-  border-radius: 20px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(77,36,23,0.12));
-  border: 1px solid rgba(255,255,255,0.18);
 }
 
 .location-copy {
@@ -223,6 +225,41 @@ h1 {
 
 .location-copy span:last-child {
   color: var(--text-soft);
+}
+
+.location-hint-top {
+  margin: 0 0 12px;
+  color: var(--text-soft);
+  line-height: 1.8;
+}
+
+.result-state {
+  display: grid;
+  gap: 16px;
+  text-align: center;
+}
+
+.result-state-accepted {
+  gap: 18px;
+}
+
+.result-state-declined {
+  min-height: 180px;
+  place-content: center;
+}
+
+.result-message {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.9;
+}
+
+.accepted-message {
+  color: #42639a;
+}
+
+.declined-message {
+  color: #5976a8;
 }
 
 .field {
@@ -329,6 +366,11 @@ input:disabled {
   text-align: center;
 }
 
+.confirm-dialog-minimal {
+  width: min(calc(100% - 32px), 320px);
+  padding: 20px;
+}
+
 .confirm-kicker {
   margin: 0 0 10px;
   font-size: 0.75rem;
@@ -350,7 +392,7 @@ input:disabled {
 .confirm-actions {
   display: grid;
   gap: 12px;
-  margin-top: 22px;
+  margin-top: 0;
 }
 
 .confirm-button {
