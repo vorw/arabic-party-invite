@@ -15,6 +15,7 @@ const STORAGE_KEY = "invite-rsvp-draft";
 
 const state = {
   name: new URLSearchParams(window.location.search).get("name") || "",
+  selectedResponse: "",
   message: "",
   messageType: "idle"
 };
@@ -87,8 +88,8 @@ function render() {
           <input type="hidden" id="submittedAtField" name="submittedAt" value="">
 
           <div class="actions">
-            <button class="button accept" type="button" data-response="accepted">سأحضر</button>
-            <button class="button decline" type="button" data-response="declined">لن أستطيع الحضور</button>
+            <button class="button ${state.selectedResponse === "accepted" ? "is-selected" : ""}" type="button" data-response="accepted">سأحضر</button>
+            <button class="button ${state.selectedResponse === "declined" ? "is-selected" : ""}" type="button" data-response="declined">لن أستطيع الحضور</button>
           </div>
         </form>
 
@@ -122,10 +123,11 @@ function submitResponse(response, button, event) {
 
   responseField.value = response;
   submittedAtField.value = new Date().toISOString();
+  state.selectedResponse = response;
 
   clearDraft();
   setMessage(response === "accepted" ? "تم تسجيل حضورك بنجاح." : "تم تسجيل اعتذارك بنجاح.", "success");
-  syncStatus();
+  render();
 
   if (response === "accepted") {
     burstConfetti(button, event);

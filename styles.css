@@ -279,10 +279,12 @@ input::placeholder {
 .button {
   min-height: 58px;
   border-radius: 999px;
-  border: none;
+  border: 1px solid rgba(184, 120, 70, 0.14);
   font: inherit;
   cursor: pointer;
   font-weight: 700;
+  color: var(--text);
+  background: var(--decline);
   transition: transform 160ms ease, opacity 160ms ease, box-shadow 160ms ease, background 160ms ease;
 }
 
@@ -296,16 +298,11 @@ input:disabled {
   cursor: not-allowed;
 }
 
-.accept {
+.button.is-selected {
   color: #ffffff;
   background: linear-gradient(135deg, var(--accept), var(--accept-deep));
   box-shadow: 0 14px 28px rgba(222, 114, 69, 0.26);
-}
-
-.decline {
-  color: var(--text);
-  background: var(--decline);
-  border: 1px solid rgba(184, 120, 70, 0.14);
+  border-color: transparent;
 }
 
 .status {
