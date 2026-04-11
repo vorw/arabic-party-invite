@@ -4,7 +4,7 @@ const config = {
   welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
   note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
   locationTitle: "الموقع",
-  locationLabel: "أم عبد الملك",
+  locationLabel: "بيت أم عبد الملك",
   locationHint: "اضغط لفتح الموقع في خرائط Google",
   locationMapsUrl: "https://maps.app.goo.gl/h6NaD2L5EMpfTBD8A",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
