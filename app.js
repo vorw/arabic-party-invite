@@ -39,13 +39,16 @@ function attachEvents() {
       return;
     }
 
-    submitResponse(button.dataset.response);
+    submitResponse(button.dataset.response, button, event);
   });
 }
 
 function render() {
   root.innerHTML = `
     <section class="page-shell">
+      <div class="ambient ambient-a" aria-hidden="true"></div>
+      <div class="ambient ambient-b" aria-hidden="true"></div>
+      <div class="ambient ambient-c" aria-hidden="true"></div>
       <article class="invite-panel">
         <div class="panel-ornament" aria-hidden="true"></div>
         <p class="eyebrow">Invitation</p>
@@ -74,11 +77,12 @@ function render() {
 
         <p class="status ${state.messageType}">${escapeHtml(state.message || "")}</p>
       </article>
+      <div class="confetti-layer" aria-hidden="true"></div>
     </section>
   `;
 }
 
-function submitResponse(response) {
+function submitResponse(response, button, event) {
   const guestName = state.name.trim();
 
   if (!guestName) {
@@ -103,6 +107,11 @@ function submitResponse(response) {
   clearDraft();
   setMessage(response === "accepted" ? "تم تسجيل حضورك بنجاح." : "تم تسجيل اعتذارك بنجاح.", "success");
   syncStatus();
+
+  if (response === "accepted") {
+    burstConfetti(button, event);
+  }
+
   form.submit();
 }
 
@@ -119,6 +128,45 @@ function syncStatus() {
 
   status.className = `status ${state.messageType}`;
   status.textContent = state.message || "";
+}
+
+function burstConfetti(button, event) {
+  const layer = root.querySelector(".confetti-layer");
+  if (!layer) {
+    return;
+  }
+
+  const sourceX = typeof event?.clientX === "number"
+    ? event.clientX
+    : button.getBoundingClientRect().left + button.offsetWidth / 2;
+  const sourceY = typeof event?.clientY === "number"
+    ? event.clientY
+    : button.getBoundingClientRect().top + button.offsetHeight / 2;
+
+  const colors = ["#ef9a42", "#de7245", "#ffd166", "#fff4d6", "#f7b267"];
+
+  for (let index = 0; index < 24; index += 1) {
+    const piece = document.createElement("span");
+    const angle = (Math.PI * 2 * index) / 24;
+    const distance = 70 + Math.random() * 90;
+    const driftX = Math.cos(angle) * distance;
+    const driftY = Math.sin(angle) * distance - (40 + Math.random() * 60);
+
+    piece.className = "confetti-piece";
+    piece.style.left = `${sourceX}px`;
+    piece.style.top = `${sourceY}px`;
+    piece.style.setProperty("--dx", `${driftX}px`);
+    piece.style.setProperty("--dy", `${driftY}px`);
+    piece.style.setProperty("--rot", `${-240 + Math.random() * 480}deg`);
+    piece.style.background = colors[index % colors.length];
+    piece.style.width = `${8 + Math.random() * 6}px`;
+    piece.style.height = `${10 + Math.random() * 8}px`;
+    layer.appendChild(piece);
+
+    window.setTimeout(() => {
+      piece.remove();
+    }, 1100);
+  }
 }
 
 function saveDraft() {
