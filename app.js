@@ -3,7 +3,7 @@ const config = {
   welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
   note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
   eventLabel: "عشاء الجمعة · 17 أبريل 2026",
-  submitEndpoint: "https://script.google.com/macros/s/AKfycbwVM0NOFPdmupWPL3j2Wcd9kWrdj_uBwDfOHx6grXV-W0h_YdXyoutIC48AhD3GOMb4GQ/exec"
+  submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
 
 const STORAGE_KEY = "invite-rsvp-draft";
