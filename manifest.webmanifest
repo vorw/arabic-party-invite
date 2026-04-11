@@ -1,0 +1,29 @@
+{
+  "id": "./",
+  "name": "بطاقة الدعوة",
+  "short_name": "الدعوة",
+  "description": "بطاقة دعوة عربية مع تأكيد حضور سريع عبر واتساب.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#120a07",
+  "theme_color": "#23140b",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["events", "lifestyle"],
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
