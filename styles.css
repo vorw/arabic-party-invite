@@ -205,12 +205,10 @@ h1 {
 .location-preview {
   position: relative;
   height: 170px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0)),
-    radial-gradient(circle at 22% 28%, rgba(71, 118, 86, 0.92) 0 18%, transparent 19%),
-    radial-gradient(circle at 74% 26%, rgba(84, 132, 92, 0.84) 0 14%, transparent 15%),
-    radial-gradient(circle at 66% 72%, rgba(67, 108, 74, 0.82) 0 14%, transparent 15%),
-    linear-gradient(115deg, rgba(199, 185, 157, 0.98) 0 30%, rgba(229, 219, 196, 0.98) 30% 46%, rgba(198, 182, 154, 0.98) 46% 62%, rgba(235, 228, 209, 0.98) 62% 100%);
+  background-color: #d8ccb7;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .location-preview::before {
@@ -219,9 +217,8 @@ h1 {
   inset: 18px;
   border-radius: 20px;
   background:
-    linear-gradient(90deg, transparent 0 32%, rgba(255,255,255,0.38) 32% 34%, transparent 34% 64%, rgba(255,255,255,0.32) 64% 66%, transparent 66% 100%),
-    linear-gradient(0deg, transparent 0 28%, rgba(255,255,255,0.3) 28% 30%, transparent 30% 58%, rgba(255,255,255,0.24) 58% 60%, transparent 60% 100%);
-  mix-blend-mode: soft-light;
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(77,36,23,0.12));
+  border: 1px solid rgba(255,255,255,0.18);
 }
 
 .location-pin {

@@ -6,6 +6,7 @@ const config = {
   locationTitle: "الموقع",
   locationLabel: "بيت أم عبد الملك",
   locationHint: "اضغط لفتح الموقع في خرائط Google",
+  locationImageSrc: "./assets/location-photo.jpg?v=11",
   locationMapsUrl: "https://maps.app.goo.gl/h6NaD2L5EMpfTBD8A",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
@@ -67,7 +68,7 @@ function render() {
           rel="noopener"
           ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? 'aria-disabled="true"' : ""}
         >
-          <div class="location-preview" aria-hidden="true">
+          <div class="location-preview" style="background-image: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0)), url('${escapeAttribute(config.locationImageSrc)}');" aria-hidden="true">
             <span class="location-pin"></span>
           </div>
           <div class="location-copy">
@@ -80,8 +81,8 @@ function render() {
         <form id="rsvpForm" action="${escapeAttribute(config.submitEndpoint)}" method="POST" target="submitFrame">
           <label class="field" for="guestName">
             <span>الاسم</span>
-          <input id="guestName" name="name" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}">
-        </label>
+            <input id="guestName" name="name" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}">
+          </label>
 
           <input type="hidden" id="responseField" name="response" value="">
           <input type="hidden" name="event" value="${escapeAttribute(config.welcome)}">
