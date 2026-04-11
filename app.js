@@ -1,7 +1,12 @@
 const config = {
+  logoSrc: "./assets/logo.png?v=9",
   title: "دعوة عشاء",
   welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
   note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
+  locationTitle: "الموقع",
+  locationLabel: "أضف العنوان هنا",
+  locationHint: "اضغط لفتح الموقع في خرائط Google",
+  locationMapsUrl: "PASTE_GOOGLE_MAPS_LINK_HERE",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
 
@@ -50,10 +55,28 @@ function render() {
       <div class="ambient ambient-c" aria-hidden="true"></div>
       <article class="invite-panel">
         <div class="panel-ornament" aria-hidden="true"></div>
+        <img class="invite-logo" src="${escapeAttribute(config.logoSrc)}" alt="شعار الدعوة">
         <p class="eyebrow">دعوة خاصة</p>
         <h1>${escapeHtml(config.title)}</h1>
         <p class="welcome">${escapeHtml(config.welcome)}</p>
         <p class="note">${escapeHtml(config.note)}</p>
+
+        <a
+          class="location-card ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? "disabled" : ""}"
+          href="${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? "#" : escapeAttribute(config.locationMapsUrl)}"
+          target="_blank"
+          rel="noopener"
+          ${config.locationMapsUrl.includes("PASTE_GOOGLE_MAPS") ? 'aria-disabled="true"' : ""}
+        >
+          <div class="location-preview" aria-hidden="true">
+            <span class="location-pin"></span>
+          </div>
+          <div class="location-copy">
+            <span class="location-kicker">${escapeHtml(config.locationTitle)}</span>
+            <strong>${escapeHtml(config.locationLabel)}</strong>
+            <span>${escapeHtml(config.locationHint)}</span>
+          </div>
+        </a>
 
         <form id="rsvpForm" action="${escapeAttribute(config.submitEndpoint)}" method="POST" target="submitFrame">
           <label class="field" for="guestName">

@@ -130,6 +130,15 @@ body::before {
   backdrop-filter: blur(20px);
 }
 
+.invite-logo {
+  display: block;
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 16px;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 28px rgba(135, 83, 44, 0.18));
+}
+
 .invite-panel::before {
   content: "";
   position: absolute;
@@ -177,6 +186,96 @@ h1 {
 .note {
   margin: 18px 0 28px;
   line-height: 1.8;
+}
+
+.location-card {
+  display: block;
+  margin: 0 0 22px;
+  overflow: hidden;
+  border-radius: 24px;
+  text-decoration: none;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(166, 103, 58, 0.12);
+  box-shadow: 0 18px 40px rgba(127, 67, 42, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.location-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 48px rgba(127, 67, 42, 0.12);
+}
+
+.location-card.disabled {
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.location-preview {
+  position: relative;
+  height: 170px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0)),
+    radial-gradient(circle at 22% 28%, rgba(71, 118, 86, 0.92) 0 18%, transparent 19%),
+    radial-gradient(circle at 74% 26%, rgba(84, 132, 92, 0.84) 0 14%, transparent 15%),
+    radial-gradient(circle at 66% 72%, rgba(67, 108, 74, 0.82) 0 14%, transparent 15%),
+    linear-gradient(115deg, rgba(199, 185, 157, 0.98) 0 30%, rgba(229, 219, 196, 0.98) 30% 46%, rgba(198, 182, 154, 0.98) 46% 62%, rgba(235, 228, 209, 0.98) 62% 100%);
+}
+
+.location-preview::before {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border-radius: 20px;
+  background:
+    linear-gradient(90deg, transparent 0 32%, rgba(255,255,255,0.38) 32% 34%, transparent 34% 64%, rgba(255,255,255,0.32) 64% 66%, transparent 66% 100%),
+    linear-gradient(0deg, transparent 0 28%, rgba(255,255,255,0.3) 28% 30%, transparent 30% 58%, rgba(255,255,255,0.24) 58% 60%, transparent 60% 100%);
+  mix-blend-mode: soft-light;
+}
+
+.location-pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ffffff, #ffe0a9);
+  border: 4px solid rgba(214, 92, 82, 0.92);
+  box-shadow: 0 10px 22px rgba(77, 36, 23, 0.18);
+  transform: translate(-50%, -50%);
+}
+
+.location-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 12px;
+  height: 16px;
+  background: rgba(214, 92, 82, 0.92);
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  transform: translateX(-50%);
+}
+
+.location-copy {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px 18px;
+  text-align: right;
+}
+
+.location-kicker {
+  font-size: 0.82rem;
+  color: #bf7448;
+}
+
+.location-copy strong {
+  font-size: 1.02rem;
+}
+
+.location-copy span:last-child {
+  color: var(--text-soft);
 }
 
 .field {
@@ -368,6 +467,11 @@ input:disabled {
   .invite-panel {
     padding: 36px 20px 24px;
     border-radius: 26px;
+  }
+
+  .invite-logo {
+    width: 92px;
+    height: 92px;
   }
 
   .actions {
