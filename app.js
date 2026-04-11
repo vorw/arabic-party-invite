@@ -112,7 +112,9 @@ function submitResponse(response, button, event) {
     burstConfetti(button, event);
   }
 
-  form.submit();
+  window.setTimeout(() => {
+    form.submit();
+  }, response === "accepted" ? 320 : 80);
 }
 
 function setMessage(message, type) {
@@ -145,12 +147,12 @@ function burstConfetti(button, event) {
 
   const colors = ["#ef9a42", "#de7245", "#ffd166", "#fff4d6", "#f7b267"];
 
-  for (let index = 0; index < 24; index += 1) {
+  for (let index = 0; index < 32; index += 1) {
     const piece = document.createElement("span");
-    const angle = (Math.PI * 2 * index) / 24;
-    const distance = 70 + Math.random() * 90;
+    const angle = (Math.PI * 2 * index) / 32;
+    const distance = 90 + Math.random() * 120;
     const driftX = Math.cos(angle) * distance;
-    const driftY = Math.sin(angle) * distance - (40 + Math.random() * 60);
+    const driftY = Math.sin(angle) * distance - (60 + Math.random() * 90);
 
     piece.className = "confetti-piece";
     piece.style.left = `${sourceX}px`;
@@ -165,7 +167,7 @@ function burstConfetti(button, event) {
 
     window.setTimeout(() => {
       piece.remove();
-    }, 1100);
+    }, 1400);
   }
 }
 
