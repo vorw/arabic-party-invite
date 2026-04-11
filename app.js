@@ -1,7 +1,7 @@
 const config = {
   title: "دعوة عشاء",
-  welcome: "يسعدنا دعوتك إلى",
-  note: "❤️ نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
+  welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
+  note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
   eventLabel: "عشاء الجمعة · 17 أبريل 2026",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
@@ -51,7 +51,7 @@ function render() {
       <div class="ambient ambient-c" aria-hidden="true"></div>
       <article class="invite-panel">
         <div class="panel-ornament" aria-hidden="true"></div>
-        <p class="eyebrow">Invitation</p>
+        <p class="eyebrow">دعوة خاصة</p>
         <h1>${escapeHtml(config.title)}</h1>
         <p class="welcome">${escapeHtml(config.welcome)}</p>
         <p class="event-label">${escapeHtml(config.eventLabel)}</p>
@@ -169,6 +169,16 @@ function burstConfetti(button, event) {
       piece.remove();
     }, 1400);
   }
+
+  const burst = document.createElement("span");
+  burst.className = "confetti-burst";
+  burst.style.left = `${sourceX}px`;
+  burst.style.top = `${sourceY}px`;
+  layer.appendChild(burst);
+
+  window.setTimeout(() => {
+    burst.remove();
+  }, 700);
 }
 
 function saveDraft() {
