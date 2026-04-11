@@ -7,7 +7,7 @@ const config = {
   locationLabel: "",
   locationHint: "",
   locationImageSrc: "./assets/location-photo.jpg?v=14",
-  locationMapsUrl: "‏https://maps.app.goo.gl/p2VdWpQdq9PsZ8RKA?g_st=iw",
+  locationMapsUrl: "https://maps.app.goo.gl/GyU3XFoqgerX27en6",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
 
