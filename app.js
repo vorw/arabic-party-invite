@@ -3,7 +3,7 @@ const config = {
   welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
   note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
   eventLabel: "عشاء الجمعة · 17 أبريل 2026",
-  submitEndpoint: ""
+  submitEndpoint: "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"
 };
 
 const STORAGE_KEY = "invite-rsvp-draft";
@@ -78,8 +78,8 @@ async function submitResponse(response) {
     return;
   }
 
-  if (!config.submitEndpoint) {
-    setMessage("واجهة التخزين غير مهيأة بعد. أستطيع إكمالها فور تزويدنا بقاعدة البيانات أو رابط النموذج.", "error");
+  if (!config.submitEndpoint || config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
+    setMessage("رابط Google Sheets غير مضاف بعد.", "error");
     return;
   }
 
@@ -100,6 +100,7 @@ async function submitResponse(response) {
       headers: {
         "Content-Type": "application/json"
       },
+      mode: "cors",
       body: JSON.stringify(payload)
     });
 
