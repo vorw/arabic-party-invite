@@ -2,7 +2,6 @@ const config = {
   title: "دعوة عشاء",
   welcome: "يسعدنا دعوتك إلى عشاء يوم الجمعة 17 أبريل 2026.",
   note: "نرجو تأكيد حضورك من خلال اختيار أحد الخيارين أدناه.",
-  eventLabel: "عشاء الجمعة · 17 أبريل 2026",
   submitEndpoint: "https://script.google.com/macros/s/AKfycbzRsSCOH88WE2g4KaX8wIH56eB_r-moDgE0RFTE24RqDcbgjpj2Y-5Ki4fH-RHDxnzNVg/exec"
 };
 
@@ -54,17 +53,16 @@ function render() {
         <p class="eyebrow">دعوة خاصة</p>
         <h1>${escapeHtml(config.title)}</h1>
         <p class="welcome">${escapeHtml(config.welcome)}</p>
-        <p class="event-label">${escapeHtml(config.eventLabel)}</p>
         <p class="note">${escapeHtml(config.note)}</p>
 
         <form id="rsvpForm" action="${escapeAttribute(config.submitEndpoint)}" method="POST" target="submitFrame">
           <label class="field" for="guestName">
             <span>الاسم</span>
-            <input id="guestName" name="name" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}">
-          </label>
+          <input id="guestName" name="name" type="text" placeholder="اكتب اسمك هنا" value="${escapeAttribute(state.name)}">
+        </label>
 
           <input type="hidden" id="responseField" name="response" value="">
-          <input type="hidden" name="event" value="${escapeAttribute(config.eventLabel)}">
+          <input type="hidden" name="event" value="${escapeAttribute(config.welcome)}">
           <input type="hidden" id="submittedAtField" name="submittedAt" value="">
 
           <div class="actions">
@@ -110,11 +108,13 @@ function submitResponse(response, button, event) {
 
   if (response === "accepted") {
     burstConfetti(button, event);
+  } else {
+    burstDecline(button, event);
   }
 
   window.setTimeout(() => {
     form.submit();
-  }, response === "accepted" ? 320 : 80);
+  }, response === "accepted" ? 320 : 220);
 }
 
 function setMessage(message, type) {
@@ -145,7 +145,7 @@ function burstConfetti(button, event) {
     ? event.clientY
     : button.getBoundingClientRect().top + button.offsetHeight / 2;
 
-  const colors = ["#ef9a42", "#de7245", "#ffd166", "#fff4d6", "#f7b267"];
+  const colors = ["#ff6b6b", "#ffd166", "#4ecdc4", "#7b61ff", "#ff8fab", "#8bd3ff", "#f7b267"];
 
   for (let index = 0; index < 32; index += 1) {
     const piece = document.createElement("span");
@@ -178,6 +178,47 @@ function burstConfetti(button, event) {
 
   window.setTimeout(() => {
     burst.remove();
+  }, 700);
+}
+
+function burstDecline(button, event) {
+  const layer = root.querySelector(".confetti-layer");
+  if (!layer) {
+    return;
+  }
+
+  const sourceX = typeof event?.clientX === "number"
+    ? event.clientX
+    : button.getBoundingClientRect().left + button.offsetWidth / 2;
+  const sourceY = typeof event?.clientY === "number"
+    ? event.clientY
+    : button.getBoundingClientRect().top + button.offsetHeight / 2;
+
+  for (let index = 0; index < 16; index += 1) {
+    const spark = document.createElement("span");
+    const angle = (Math.PI * 2 * index) / 16;
+    const distance = 28 + Math.random() * 42;
+    spark.className = "decline-spark";
+    spark.style.left = `${sourceX}px`;
+    spark.style.top = `${sourceY}px`;
+    spark.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
+    spark.style.setProperty("--dy", `${Math.sin(angle) * distance}px`);
+    spark.style.setProperty("--rot", `${-120 + Math.random() * 240}deg`);
+    layer.appendChild(spark);
+
+    window.setTimeout(() => {
+      spark.remove();
+    }, 850);
+  }
+
+  const ripple = document.createElement("span");
+  ripple.className = "decline-ripple";
+  ripple.style.left = `${sourceX}px`;
+  ripple.style.top = `${sourceY}px`;
+  layer.appendChild(ripple);
+
+  window.setTimeout(() => {
+    ripple.remove();
   }, 700);
 }
 
