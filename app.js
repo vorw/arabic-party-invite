@@ -83,13 +83,13 @@ function submitResponse(response) {
 
   if (!guestName) {
     setMessage("الرجاء كتابة الاسم أولاً.", "error");
-    render();
+    syncStatus();
     return;
   }
 
   if (!config.submitEndpoint || config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
     setMessage("رابط Google Sheets غير مضاف بعد.", "error");
-    render();
+    syncStatus();
     return;
   }
 
@@ -100,15 +100,25 @@ function submitResponse(response) {
   responseField.value = response;
   submittedAtField.value = new Date().toISOString();
 
-  form.submit();
   clearDraft();
   setMessage(response === "accepted" ? "تم تسجيل حضورك بنجاح." : "تم تسجيل اعتذارك بنجاح.", "success");
-  render();
+  syncStatus();
+  form.submit();
 }
 
 function setMessage(message, type) {
   state.message = message;
   state.messageType = type;
+}
+
+function syncStatus() {
+  const status = root.querySelector(".status");
+  if (!status) {
+    return;
+  }
+
+  status.className = `status ${state.messageType}`;
+  status.textContent = state.message || "";
 }
 
 function saveDraft() {
