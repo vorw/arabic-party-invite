@@ -1,4 +1,4 @@
-import { getBrowserClient, hasSupabaseConfig } from "../supabase.js?v=1";
+import { getBrowserClient, hasSupabaseConfig } from "../supabase.js?v=2";
 
 const root = document.getElementById("admin-app");
 const supabase = getBrowserClient();
