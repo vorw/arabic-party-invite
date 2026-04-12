@@ -96,14 +96,27 @@ root.addEventListener("submit", async (event) => {
 
   event.preventDefault();
   const formData = new FormData(form);
-  const email = String(formData.get("email") || "").trim();
+  const username = String(formData.get("username") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
 
   state.status = "Signing in...";
   state.statusType = "success";
   render();
 
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data: loginRow, error: loginLookupError } = await supabase
+    .from("admin_users")
+    .select("email")
+    .eq("username", username)
+    .maybeSingle();
+
+  if (loginLookupError || !loginRow?.email) {
+    state.status = "Username not found.";
+    state.statusType = "error";
+    render();
+    return;
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({ email: loginRow.email, password });
   if (error) {
     state.status = error.message || "Could not sign in.";
     state.statusType = "error";
@@ -177,15 +190,15 @@ function renderLogin() {
     <section class="login-wrap">
       <article class="login-card">
         <h1>Admin Access</h1>
-        <p>Sign in with the Supabase admin account to view and manage RSVP responses.</p>
+        <p>Sign in with your admin username and password to view and manage RSVP responses.</p>
         <form class="login-form" data-login-form>
           <label class="field">
-            <span>Email</span>
-            <input type="email" name="email" placeholder="admin@example.com" required>
+            <span>Username</span>
+            <input type="text" name="username" placeholder="admin" autocapitalize="off" autocomplete="username" required>
           </label>
           <label class="field">
             <span>Password</span>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
           </label>
           <button class="primary-button" type="submit">Sign in</button>
         </form>

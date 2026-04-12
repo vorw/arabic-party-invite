@@ -13,9 +13,16 @@ create index if not exists rsvps_response_idx on public.rsvps (response);
 
 create table if not exists public.admin_users (
   user_id uuid primary key references auth.users (id) on delete cascade,
+  username text,
   email text unique,
   created_at timestamptz not null default timezone('utc', now())
 );
+
+alter table public.admin_users add column if not exists username text;
+update public.admin_users
+set username = coalesce(username, lower(split_part(email, '@', 1)))
+where email is not null and (username is null or btrim(username) = '');
+create unique index if not exists admin_users_username_key on public.admin_users (username);
 
 create or replace function public.is_admin()
 returns boolean
@@ -68,5 +75,12 @@ for select
 to authenticated
 using (auth.uid() = user_id);
 
+drop policy if exists "public can look up admin username" on public.admin_users;
+create policy "public can look up admin username"
+on public.admin_users
+for select
+to anon
+using (username is not null and email is not null);
+
 comment on table public.rsvps is 'Guest RSVP submissions from the invitation page.';
-comment on table public.admin_users is 'Auth users allowed to access the /admin dashboard.';
+comment on table public.admin_users is 'Auth users allowed to access the /admin dashboard, including username to email mapping for login.';

@@ -54,13 +54,14 @@ In Supabase Auth:
 
 1. Create a user with email + password
 2. Copy that user’s UUID
-3. Insert it into `public.admin_users`
+3. Choose an admin username
+4. Insert it into `public.admin_users`
 
 Example:
 
 ```sql
-insert into public.admin_users (user_id, email)
-values ('PASTE_AUTH_USER_ID_HERE', 'admin@example.com');
+insert into public.admin_users (user_id, username, email)
+values ('PASTE_AUTH_USER_ID_HERE', 'admin', 'admin@example.com');
 ```
 
 That user will then be able to open:
@@ -73,7 +74,7 @@ and sign in to access the dashboard.
 
 The `/admin` dashboard supports:
 
-- sign in with email/password
+- sign in with username/password
 - view all RSVP rows
 - accepted / declined counts
 - delete RSVP rows
