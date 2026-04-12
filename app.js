@@ -27,6 +27,7 @@ const state = {
 const root = document.getElementById("app");
 let supabase = null;
 let supabaseReady = false;
+let supabaseInitPromise = null;
 
 loadDraft();
 loadDecision();
@@ -35,16 +36,28 @@ attachEvents();
 initSupabase();
 
 async function initSupabase() {
-  try {
-    const supabaseModule = await import("./supabase.js?v=2");
-    if (supabaseModule.hasSupabaseConfig()) {
-      supabase = supabaseModule.getBrowserClient();
-      supabaseReady = Boolean(supabase);
+  if (supabaseInitPromise) {
+    return supabaseInitPromise;
+  }
+
+  supabaseInitPromise = (async () => {
+    try {
+      const supabaseModule = await import("./supabase.js?v=2");
+      if (supabaseModule.hasSupabaseConfig()) {
+        supabase = supabaseModule.getBrowserClient();
+        supabaseReady = Boolean(supabase);
+      }
+    } catch (error) {
+      console.error("Supabase module failed to load:", error);
+      supabase = null;
+      supabaseReady = false;
     }
-  } catch (error) {
-    console.error("Supabase module failed to load:", error);
-    supabase = null;
-    supabaseReady = false;
+  })();
+
+  try {
+    await supabaseInitPromise;
+  } finally {
+    return supabaseInitPromise;
   }
 }
 
@@ -220,6 +233,8 @@ async function confirmDecision(response, event) {
 }
 
 async function submitRsvp(response) {
+  await initSupabase();
+
   const submittedAt = new Date().toISOString();
   const payload = {
     guest_name: state.name.trim(),
