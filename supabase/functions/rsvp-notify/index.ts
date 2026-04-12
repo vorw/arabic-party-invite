@@ -39,6 +39,11 @@ Deno.serve(async (request) => {
     });
   }
 
+  const recipients = notifyEmail
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
   const payload = (await request.json()) as WebhookPayload;
   const record = payload.record ?? {};
 
@@ -55,7 +60,7 @@ Deno.serve(async (request) => {
     },
     body: JSON.stringify({
       from: fromEmail,
-      to: [notifyEmail],
+      to: recipients,
       subject: "Invitations.live [NEW RESPONSE]",
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.7; color: #1f3354;">
