@@ -1,3 +1,5 @@
+import { getBrowserClient, hasSupabaseConfig } from "./supabase.js?v=1";
+
 const config = {
   logoSrc: "./assets/logo.png?v=9",
   title: "أمسية جيران اليرموك",
@@ -25,6 +27,7 @@ const state = {
 };
 
 const root = document.getElementById("app");
+const supabase = getBrowserClient();
 
 loadDraft();
 loadDecision();
@@ -155,8 +158,8 @@ function openConfirmation(response) {
     return;
   }
 
-  if (!config.submitEndpoint || config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
-    setMessage("رابط Google Sheets غير مضاف بعد.", "error");
+  if (!hasSupabaseConfig() && (!config.submitEndpoint || config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT"))) {
+    setMessage("أضف إعدادات Supabase أو رابط Google Sheets أولًا.", "error");
     syncStatus();
     return;
   }
@@ -173,38 +176,67 @@ function openConfirmation(response) {
   render();
 }
 
-function confirmDecision(response, event) {
-  const form = document.getElementById("rsvpForm");
-  const responseField = document.getElementById("responseField");
-  const submittedAtField = document.getElementById("submittedAtField");
+async function confirmDecision(response, event) {
   const actionButton = root.querySelector(`[data-response="${response}"]`);
-
-  responseField.value = response;
-  submittedAtField.value = new Date().toISOString();
   state.selectedResponse = response;
-  state.lockedResponse = response;
   state.showConfirm = false;
   state.pendingResponse = "";
-
-  clearDraft();
-  saveDecision();
-  setMessage(
-    response === "accepted"
-      ? "أسعدنا قبولك .. حياك الله 🌷"
-      : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
-    "success"
-  );
+  setMessage("جارٍ حفظ ردك...", "pending");
   render();
 
-  if (response === "accepted") {
-    burstConfetti(actionButton, event);
-  } else {
-    burstDecline(actionButton, event);
+  try {
+    await submitRsvp(response);
+    state.lockedResponse = response;
+    clearDraft();
+    saveDecision();
+    setMessage(
+      response === "accepted"
+        ? "أسعدنا قبولك .. حياك الله 🌷"
+        : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
+      "success"
+    );
+    render();
+
+    if (response === "accepted") {
+      burstConfetti(actionButton, event);
+    } else {
+      burstDecline(actionButton, event);
+    }
+  } catch (error) {
+    state.selectedResponse = "";
+    state.lockedResponse = "";
+    setMessage(error instanceof Error ? error.message : "تعذر حفظ الرد الآن.", "error");
+    render();
+  }
+}
+
+async function submitRsvp(response) {
+  const payload = {
+    guest_name: state.name.trim(),
+    response,
+    source: "web"
+  };
+
+  if (hasSupabaseConfig() && supabase) {
+    const { error } = await supabase.from("rsvps").insert(payload);
+    if (error) {
+      throw new Error("تعذر حفظ الرد في قاعدة البيانات.");
+    }
+    return;
   }
 
-  window.setTimeout(() => {
+  if (config.submitEndpoint && !config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
+    const form = document.getElementById("rsvpForm");
+    const responseField = document.getElementById("responseField");
+    const submittedAtField = document.getElementById("submittedAtField");
+
+    responseField.value = response;
+    submittedAtField.value = new Date().toISOString();
     form.submit();
-  }, response === "accepted" ? 320 : 220);
+    return;
+  }
+
+  throw new Error("إعدادات Supabase غير مضافة بعد.");
 }
 
 function setMessage(message, type) {
