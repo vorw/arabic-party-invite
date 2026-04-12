@@ -242,45 +242,22 @@ async function writeToSupabase(payload) {
 }
 
 function writeToGoogleSheets(payload) {
-  return new Promise((resolve) => {
-    const frameName = `submitFrame_${Date.now()}`;
-    const iframe = document.createElement("iframe");
-    iframe.name = frameName;
-    iframe.className = "submit-frame";
-
-    const form = document.createElement("form");
-    form.action = config.submitEndpoint;
-    form.method = "POST";
-    form.target = frameName;
-    form.style.display = "none";
-
-    const fields = {
-      name: state.name.trim(),
-      response: payload.response,
-      event: config.title,
-      submittedAt: payload.submitted_at
-    };
-
-    Object.entries(fields).forEach(([name, value]) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value;
-      form.appendChild(input);
-    });
-
-    iframe.addEventListener("load", () => {
-      window.setTimeout(() => {
-        iframe.remove();
-        form.remove();
-      }, 100);
-      resolve();
-    }, { once: true });
-
-    document.body.appendChild(iframe);
-    document.body.appendChild(form);
-    form.submit();
+  const fields = new URLSearchParams({
+    name: state.name.trim(),
+    response: payload.response,
+    event: config.title,
+    submittedAt: payload.submitted_at
   });
+
+  return fetch(config.submitEndpoint, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+    },
+    body: fields.toString(),
+    keepalive: true
+  }).then(() => undefined);
 }
 
 function setMessage(message, type) {
