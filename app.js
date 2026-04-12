@@ -179,34 +179,29 @@ function openConfirmation(response) {
 async function confirmDecision(response, event) {
   const actionButton = root.querySelector(`[data-response="${response}"]`);
   state.selectedResponse = response;
+  state.lockedResponse = response;
   state.showConfirm = false;
   state.pendingResponse = "";
-  setMessage("جارٍ حفظ ردك...", "pending");
+  clearDraft();
+  saveDecision();
+  setMessage(
+    response === "accepted"
+      ? "أسعدنا قبولك .. حياك الله 🌷"
+      : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
+    "success"
+  );
   render();
+
+  if (response === "accepted") {
+    burstConfetti(actionButton, event);
+  } else {
+    burstDecline(actionButton, event);
+  }
 
   try {
     await submitRsvp(response);
-    state.lockedResponse = response;
-    clearDraft();
-    saveDecision();
-    setMessage(
-      response === "accepted"
-        ? "أسعدنا قبولك .. حياك الله 🌷"
-        : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
-      "success"
-    );
-    render();
-
-    if (response === "accepted") {
-      burstConfetti(actionButton, event);
-    } else {
-      burstDecline(actionButton, event);
-    }
   } catch (error) {
-    state.selectedResponse = "";
-    state.lockedResponse = "";
-    setMessage(error instanceof Error ? error.message : "تعذر حفظ الرد الآن.", "error");
-    render();
+    console.error("RSVP background save failed:", error);
   }
 }
 
