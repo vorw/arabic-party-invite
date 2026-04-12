@@ -56,7 +56,7 @@ Deno.serve(async (request) => {
     body: JSON.stringify({
       from: fromEmail,
       to: [notifyEmail],
-      subject: `New RSVP: ${record.guest_name ?? "Unknown guest"}`,
+      subject: "Invitations.live [NEW RESPONSE]",
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.7; color: #1f3354;">
           <h2 style="margin-bottom: 12px;">New invitation response</h2>
