@@ -212,8 +212,9 @@ th {
 
 .pill.declined {
   color: #b45454;
-  background: rgba(236, 182, 182, 0.18);
-  border: 1px solid rgba(201, 75, 75, 0.22);
+  background: linear-gradient(135deg, rgba(235, 170, 170, 0.45), rgba(232, 190, 190, 0.28));
+  border: 1px solid rgba(201, 75, 75, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .status-line {
