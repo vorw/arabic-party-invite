@@ -1,8 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 
 export const supabaseConfig = {
-  url: "PASTE_SUPABASE_URL_HERE",
-  anonKey: "PASTE_SUPABASE_ANON_KEY_HERE"
+  url: "https://ywfjhuoleaqednkucvea.supabase.co",
+  anonKey: "sb_publishable_ujxD9hyTAHKwDtu7mRFW3Q_YaDnikiO"
 };
 
 let browserClient = null;
