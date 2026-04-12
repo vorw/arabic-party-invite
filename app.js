@@ -220,11 +220,11 @@ async function confirmDecision(response, event) {
 }
 
 async function submitRsvp(response) {
+  const submittedAt = new Date().toISOString();
   const payload = {
     guest_name: state.name.trim(),
     response,
-    source: "web",
-    submitted_at: new Date().toISOString()
+    source: "web"
   };
 
   const writes = [];
@@ -259,7 +259,7 @@ function writeToGoogleSheets(payload) {
     name: state.name.trim(),
     response: payload.response,
     event: config.title,
-    submittedAt: payload.submitted_at
+    submittedAt
   });
 
   return fetch(config.submitEndpoint, {
