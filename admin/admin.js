@@ -176,7 +176,6 @@ function renderLogin() {
   return `
     <section class="login-wrap">
       <article class="login-card">
-        <p class="helper-text">Invite Admin</p>
         <h1>Admin Access</h1>
         <p>Sign in with the Supabase admin account to view and manage RSVP responses.</p>
         <form class="login-form" data-login-form>
@@ -200,7 +199,6 @@ function renderNotAuthorized() {
   return `
     <section class="login-wrap">
       <article class="login-card">
-        <p class="helper-text">Invite Admin</p>
         <h1>Access blocked</h1>
         <p>Your account signed in successfully, but it is not listed in the admin table.</p>
         <button class="ghost-button" type="button" data-sign-out="true">Sign out</button>
@@ -219,7 +217,6 @@ function renderDashboard() {
       <article class="admin-card">
         <div class="admin-top">
           <div>
-            <p class="helper-text">Invite Admin</p>
             <h1>RSVP Dashboard</h1>
             <p>Review guest responses, remove entries, and monitor attendance in one place.</p>
           </div>
