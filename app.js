@@ -115,8 +115,8 @@ function render() {
             <input type="hidden" id="submittedAtField" name="submittedAt" value="">
 
             <div class="actions">
-              <button class="button ${displayResponse === "accepted" ? "is-selected" : ""}" type="button" data-response="accepted" ${isLocked ? "disabled" : ""}>سأحضر</button>
-              <button class="button ${displayResponse === "declined" ? "is-selected" : ""}" type="button" data-response="declined" ${isLocked ? "disabled" : ""}>لن أستطيع الحضور</button>
+              <button class="button ${displayResponse === "accepted" ? "is-selected" : ""}" type="button" data-response="accepted" ${isLocked ? "disabled" : ""}>سأحضر بمشيئة الله</button>
+              <button class="button ${displayResponse === "declined" ? "is-selected" : ""}" type="button" data-response="declined" ${isLocked ? "disabled" : ""}>أعتذر عن الحضور</button>
             </div>
           </form>
         `}
@@ -133,7 +133,7 @@ function render() {
 
 function renderConfirmation() {
   const isAccept = state.pendingResponse === "accepted";
-  const confirmLabel = isAccept ? "سأحضر" : "لن أستطيع الحضور";
+  const confirmLabel = isAccept ? "تأكيد الحضور" : "تأكيد الاعتذار";
 
   return `
     <div class="confirm-overlay" aria-hidden="true"></div>
@@ -190,7 +190,7 @@ function confirmDecision(response, event) {
   saveDecision();
   setMessage(
     response === "accepted"
-      ? "أسعدنا قبولك 🌷"
+      ? "أسعدنا قبولك .. حياك الله 🌷"
       : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
     "success"
   );
@@ -357,7 +357,7 @@ function loadDecision() {
       state.selectedResponse = decision.response;
       setMessage(
         decision.response === "accepted"
-          ? "أسعدنا قبولك 🌷"
+          ? "أسعدنا قبولك .. حياك الله 🌷"
           : "نتفهم اعتذارك ونأمل لقاءك قريبًا 🌷",
         "success"
       );
