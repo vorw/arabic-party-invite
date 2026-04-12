@@ -1,5 +1,3 @@
-import { getBrowserClient, hasSupabaseConfig } from "./supabase.js?v=2";
-
 const config = {
   logoSrc: "./assets/logo.png?v=9",
   title: "أمسية جيران اليرموك",
@@ -27,12 +25,28 @@ const state = {
 };
 
 const root = document.getElementById("app");
-const supabase = getBrowserClient();
+let supabase = null;
+let supabaseReady = false;
 
 loadDraft();
 loadDecision();
 render();
 attachEvents();
+initSupabase();
+
+async function initSupabase() {
+  try {
+    const supabaseModule = await import("./supabase.js?v=2");
+    if (supabaseModule.hasSupabaseConfig()) {
+      supabase = supabaseModule.getBrowserClient();
+      supabaseReady = Boolean(supabase);
+    }
+  } catch (error) {
+    console.error("Supabase module failed to load:", error);
+    supabase = null;
+    supabaseReady = false;
+  }
+}
 
 function attachEvents() {
   root.addEventListener("input", (event) => {
@@ -158,7 +172,7 @@ function openConfirmation(response) {
     return;
   }
 
-  if (!hasSupabaseConfig() && (!config.submitEndpoint || config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT"))) {
+  if (!supabaseReady && (!config.submitEndpoint || config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT"))) {
     setMessage("أضف إعدادات Supabase أو رابط Google Sheets أولًا.", "error");
     syncStatus();
     return;
@@ -215,7 +229,7 @@ async function submitRsvp(response) {
 
   const writes = [];
 
-  if (hasSupabaseConfig() && supabase) {
+  if (supabaseReady && supabase) {
     writes.push(writeToSupabase(payload));
   }
 
