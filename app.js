@@ -209,29 +209,78 @@ async function submitRsvp(response) {
   const payload = {
     guest_name: state.name.trim(),
     response,
-    source: "web"
+    source: "web",
+    submitted_at: new Date().toISOString()
   };
 
+  const writes = [];
+
   if (hasSupabaseConfig() && supabase) {
+    writes.push(writeToSupabase(payload));
+  }
+
+  if (config.submitEndpoint && !config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
+    writes.push(writeToGoogleSheets(payload));
+  }
+
+  if (!writes.length) {
+    throw new Error("إعدادات Supabase أو Google Sheets غير مضافة بعد.");
+  }
+
+  const results = await Promise.allSettled(writes);
+  if (results.every((result) => result.status === "rejected")) {
+    throw new Error("تعذر حفظ الرد.");
+  }
+}
+
+async function writeToSupabase(payload) {
     const { error } = await supabase.from("rsvps").insert(payload);
     if (error) {
       throw new Error("تعذر حفظ الرد في قاعدة البيانات.");
     }
-    return;
   }
+}
 
-  if (config.submitEndpoint && !config.submitEndpoint.includes("PASTE_GOOGLE_APPS_SCRIPT")) {
-    const form = document.getElementById("rsvpForm");
-    const responseField = document.getElementById("responseField");
-    const submittedAtField = document.getElementById("submittedAtField");
+function writeToGoogleSheets(payload) {
+  return new Promise((resolve) => {
+    const frameName = `submitFrame_${Date.now()}`;
+    const iframe = document.createElement("iframe");
+    iframe.name = frameName;
+    iframe.className = "submit-frame";
 
-    responseField.value = response;
-    submittedAtField.value = new Date().toISOString();
+    const form = document.createElement("form");
+    form.action = config.submitEndpoint;
+    form.method = "POST";
+    form.target = frameName;
+    form.style.display = "none";
+
+    const fields = {
+      name: state.name.trim(),
+      response: payload.response,
+      event: config.title,
+      submittedAt: payload.submitted_at
+    };
+
+    Object.entries(fields).forEach(([name, value]) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    iframe.addEventListener("load", () => {
+      window.setTimeout(() => {
+        iframe.remove();
+        form.remove();
+      }, 100);
+      resolve();
+    }, { once: true });
+
+    document.body.appendChild(iframe);
+    document.body.appendChild(form);
     form.submit();
-    return;
-  }
-
-  throw new Error("إعدادات Supabase غير مضافة بعد.");
+  });
 }
 
 function setMessage(message, type) {

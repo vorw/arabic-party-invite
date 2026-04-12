@@ -5,7 +5,7 @@ Arabic RSVP invitation site with:
 - public invitation page
 - Supabase-backed RSVP storage
 - password-protected `/admin` dashboard
-- optional Google Sheets fallback
+- optional Google Sheets mirror
 - email notification scaffold for new responses
 
 ## Current file layout
@@ -99,16 +99,19 @@ Recommended approach:
 
 When a new RSVP row is inserted, the function can email the chosen inbox.
 
-## Optional fallback: Google Sheets
+## Optional Google Sheets mirror
 
-The public invite page still supports the older Apps Script fallback if Supabase is not configured yet.
+The public invite page can also post each RSVP to Google Sheets.
 
-That fallback uses:
+It uses:
 
 - `submitEndpoint` in `app.js`
 - `google-apps-script/Code.gs`
 
-If Supabase is configured, the public page will prefer Supabase inserts.
+If both Supabase and `submitEndpoint` are configured, the page will write to both:
+
+- Supabase for `/admin`
+- Google Sheets as a parallel record
 
 ## Important security note
 
