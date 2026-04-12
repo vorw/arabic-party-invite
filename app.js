@@ -234,10 +234,9 @@ async function submitRsvp(response) {
 }
 
 async function writeToSupabase(payload) {
-    const { error } = await supabase.from("rsvps").insert(payload);
-    if (error) {
-      throw new Error("تعذر حفظ الرد في قاعدة البيانات.");
-    }
+  const { error } = await supabase.from("rsvps").insert(payload);
+  if (error) {
+    throw new Error("تعذر حفظ الرد في قاعدة البيانات.");
   }
 }
 
