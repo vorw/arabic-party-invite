@@ -239,7 +239,8 @@ async function submitRsvp(response) {
   const payload = {
     guest_name: state.name.trim(),
     response,
-    source: "web"
+    source: "web",
+    submittedAt
   };
 
   const writes = [];
@@ -274,7 +275,7 @@ function writeToGoogleSheets(payload) {
     name: state.name.trim(),
     response: payload.response,
     event: config.title,
-    submittedAt
+    submittedAt: payload.submittedAt
   });
 
   return fetch(config.submitEndpoint, {

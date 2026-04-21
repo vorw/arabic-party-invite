@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>
+    (function () {
+      var path = window.location.pathname.replace(/\/+$/, "");
+      var origin = window.location.origin;
+      var base = origin;
+
+      if (/^\/i\/[^/]+$/.test(path)) {
+        var code = path.split("/").pop();
+        window.location.replace(base + "/i/?code=" + encodeURIComponent(code));
+        return;
+      }
+
+      if (/^\/event\/[^/]+$/.test(path)) {
+        var slug = path.split("/").pop();
+        window.location.replace(base + "/app/?event=" + encodeURIComponent(slug));
+        return;
+      }
+
+      window.location.replace(base + "/");
+    })();
+  </script>
+</head>
+<body></body>
+</html>

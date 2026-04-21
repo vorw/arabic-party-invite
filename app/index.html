@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#304775">
+  <meta name="description" content="Invitations.live app workspace">
+  <title>Invitations.live App</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
+  <link rel="stylesheet" href="../site.css?v=1">
+</head>
+<body data-page="app">
+  <main class="app-shell">
+    <section class="app-frame">
+      <div class="app-topbar">
+        <a class="brand-mark" href="../">
+          <span class="brand-dot"></span>
+          <span>Invitations.live</span>
+        </a>
+        <div class="app-top-actions">
+          <a class="ghost-link" href="../i/?code=demo-yarmouk">Guest demo</a>
+          <a class="ghost-link" href="../legacy/">Legacy invite</a>
+        </div>
+      </div>
+
+      <section class="workspace-grid">
+        <article class="workspace-card">
+          <div class="workspace-topbar">
+            <div>
+              <p class="workspace-label">Product workspace</p>
+              <h1 class="workspace-heading">Multi-event invitation manager</h1>
+            </div>
+            <div class="workspace-actions">
+              <a class="secondary-link" href="../supabase/product-schema.sql">Open schema</a>
+            </div>
+          </div>
+          <p class="workspace-subtitle">
+            This app shell is now separated from the public homepage. Once the new Supabase schema is applied, events, guests, and responses will load from the product tables instead of the legacy single RSVP table.
+          </p>
+
+          <section class="metrics-grid">
+            <article class="metric-card">
+              <p class="metric-label">Route</p>
+              <strong class="metric-value">/app</strong>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Guest route</p>
+              <strong class="metric-value">/i/:code</strong>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Data model</p>
+              <strong class="metric-value">events + guests + responses</strong>
+            </article>
+          </section>
+
+          <section class="event-grid">
+            <article class="event-card is-active">
+              <p class="panel-label">Current direction</p>
+              <h2 class="event-title">Host-owned events</h2>
+              <p class="event-meta">Each signed-in user owns events, settings, guests, and RSVP activity.</p>
+              <a class="inline-link" href="../i/?code=demo-yarmouk">Open guest-side demo</a>
+            </article>
+            <article class="event-card">
+              <p class="panel-label">Migration path</p>
+              <h2 class="event-title">Legacy site preserved</h2>
+              <p class="event-meta">The one-time dinner invitation can stay accessible at a separate path while the root becomes the public product.</p>
+              <a class="inline-link" href="../legacy/">Open legacy invite</a>
+            </article>
+          </section>
+        </article>
+
+        <article class="auth-card" id="auth-card">
+          <p class="panel-label">Authentication</p>
+          <h2 class="auth-title">Host sign-in</h2>
+          <p class="auth-copy">This uses standard Supabase Auth for product users. The existing `/admin` route remains separate for the old RSVP dashboard.</p>
+          <form class="field-stack" id="auth-form">
+            <label class="field">
+              <span>Email</span>
+              <input type="email" name="email" placeholder="host@example.com" required>
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input type="password" name="password" placeholder="Password" required>
+            </label>
+            <div class="login-actions">
+              <button class="primary-button" type="submit">Sign in</button>
+              <button class="ghost-button" type="button" id="sign-up-button">Sign up</button>
+            </div>
+          </form>
+          <p class="status-copy" id="auth-status"></p>
+        </article>
+      </section>
+
+      <section class="demo-list">
+        <div class="workspace-topbar">
+          <div>
+            <p class="panel-label">Planned event tables</p>
+            <h2 class="workspace-heading">What the product will manage</h2>
+          </div>
+        </div>
+        <div class="table-head">
+          <span>Table</span>
+          <span>Purpose</span>
+          <span>Public access</span>
+        </div>
+        <div class="list-shell">
+          <div class="table-row">
+            <strong>profiles</strong>
+            <span>host identity</span>
+            <span>private</span>
+          </div>
+          <div class="table-row">
+            <strong>events</strong>
+            <span>invitation records</span>
+            <span>host-owned</span>
+          </div>
+          <div class="table-row">
+            <strong>guests</strong>
+            <span>unique invite links</span>
+            <span>restricted by invite code</span>
+          </div>
+          <div class="table-row">
+            <strong>responses</strong>
+            <span>RSVP history</span>
+            <span>insert per guest link</span>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <script type="module" src="./app.js?v=1"></script>
+</body>
+</html>
