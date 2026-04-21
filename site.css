@@ -66,7 +66,8 @@ textarea {
 
 .marketing-shell,
 .app-shell,
-.invite-shell {
+.invite-shell,
+.maintenance-shell {
   position: relative;
   z-index: 1;
   width: min(calc(100% - 32px), var(--max-width));
@@ -75,6 +76,47 @@ textarea {
 
 .marketing-shell {
   padding: 24px 0 48px;
+}
+
+.maintenance-shell {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+}
+
+.maintenance-panel {
+  width: min(100%, 720px);
+  padding: 42px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(247, 250, 255, 0.92));
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(18px);
+  text-align: center;
+}
+
+.maintenance-kicker {
+  margin: 28px 0 14px;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(62, 90, 138, 0.72);
+}
+
+.maintenance-title {
+  margin: 0;
+  font-family: var(--display-font);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.03em;
+}
+
+.maintenance-copy {
+  max-width: 34rem;
+  margin: 20px auto 0;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  font-size: 1.02rem;
 }
 
 .site-header {
@@ -696,7 +738,8 @@ textarea {
 @media (max-width: 640px) {
   .marketing-shell,
   .app-shell,
-  .invite-shell {
+  .invite-shell,
+  .maintenance-shell {
     width: min(calc(100% - 20px), var(--max-width));
   }
 
@@ -707,7 +750,8 @@ textarea {
   .invite-frame,
   .workspace-card,
   .auth-card,
-  .invite-card {
+  .invite-card,
+  .maintenance-panel {
     padding: 22px;
     border-radius: 26px;
   }
